@@ -9,6 +9,8 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.chrome.ChromeDriver;
 
+import java.util.concurrent.TimeUnit;
+
 import static org.openqa.selenium.support.ui.ExpectedConditions.titleIs;
 
 public class BaseTest {
@@ -24,10 +26,8 @@ public class BaseTest {
             return;
         }
 
-        WebDriverManager.chromedriver().version("73.0.3683").setup();
-//не удалось запустить new ChromeDriver(); без менеджера драйверов, конструктор ожидает путь до драйвера
-//        На сколь корректно использовать менеджер или есть другой вариант настройки?
         driver = new ChromeDriver();
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         tlDriver.set(driver);
         System.out.println(((HasCapabilities) driver).getCapabilities());
         wait = new WebDriverWait(driver, 10);
@@ -44,7 +44,7 @@ public class BaseTest {
 
 
     @Test
-    public void myFirstTest() {
+    public void myFirstTest() throws InterruptedException {
         driver.navigate().to("http://www.google.com");
         driver.findElement(By.name("q")).sendKeys("webdriver");
         driver.findElement(By.name("q")).submit();
